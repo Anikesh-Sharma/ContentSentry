@@ -44,6 +44,7 @@ services:
       - LOCALSTACK_AUTH_TOKEN=ls-FAxiWoTE-0145-WUmU-Vuza-1654FIrEdbbc
       - SERVICES=s3,sqs,dynamodb,lambda,iam
       - DEBUG=0
+      - PERSISTENCE=1
       - DOCKER_HOST=unix:///var/run/docker.sock
     volumes:
       - ./local/volumes/localstack:/var/lib/localstack
