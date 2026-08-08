@@ -1,0 +1,55 @@
+name: contentsentry-local
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: cs-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cs_user
+      POSTGRES_PASSWORD: cs_pass
+      POSTGRES_DB: contentsentry
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./local/volumes/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cs_user -d contentsentry"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  valkey:
+    image: valkey/valkey:8-alpine
+    container_name: cs-valkey
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./local/volumes/valkey:/data
+    command: valkey-server --save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  localstack:
+    image: localstack/localstack:latest
+    container_name: cs-localstack
+    restart: unless-stopped
+    ports:
+      - "4566:4566"
+    environment:
+      - LOCALSTACK_AUTH_TOKEN=ls-FAxiWoTE-0145-WUmU-Vuza-1654FIrEdbbc
+      - SERVICES=s3,sqs,dynamodb,lambda,iam
+      - DEBUG=0
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - ./local/volumes/localstack:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:4566/_localstack/health | grep -q available"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

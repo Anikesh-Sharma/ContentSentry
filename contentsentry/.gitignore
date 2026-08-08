@@ -1,0 +1,16 @@
+# terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+
+# env / secrets
+.env
+*.pem
+
+# local docker volumes (never commit these)
+local/
+
+# os
+.DS_Store
