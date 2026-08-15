@@ -42,7 +42,7 @@ services:
       - "4566:4566"
     environment:
       - LOCALSTACK_AUTH_TOKEN=ls-FAxiWoTE-0145-WUmU-Vuza-1654FIrEdbbc
-      - SERVICES=s3,sqs,dynamodb,lambda,iam
+      - SERVICES=s3,sqs,dynamodb,lambda,iam,sns
       - DEBUG=0
       - PERSISTENCE=1
       - DOCKER_HOST=unix:///var/run/docker.sock
